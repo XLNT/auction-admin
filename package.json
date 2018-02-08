@@ -7,7 +7,7 @@
     "type": "git",
     "url": "git+https://github.com/hillstreetlabs/registry.git"
   },
-  "author": "The Hill St Labs Team",
+  "author": "The Hill Street Labs",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/hillstreetlabs/registryissues"
@@ -36,7 +36,8 @@
     "pre-commit": "^1.2.2",
     "prettier": "^1.9.2",
     "solidity-sha3": "^0.4.1",
-    "truffle": "^4.0.4",
+    "truffle": "^4.0.5",
+    "truffle-contract": "git+ssh://git@github.com/pfletcherhill/truffle-contract.git",
     "truffle-flattener": "^1.2.0",
     "truffle-hdwallet-provider": "0.0.3"
   }

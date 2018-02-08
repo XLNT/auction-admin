@@ -1,5 +1,5 @@
-const StandardAssetRegistry = artifacts.require("./StandardAssetRegistry.sol");
+const HillCore = artifacts.require("./HillCore.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(StandardAssetRegistry);
+  deployer.deploy(HillCore);
 };
