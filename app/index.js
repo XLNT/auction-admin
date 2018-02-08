@@ -1,5 +1,16 @@
-import IPFS from "ipfs";
+import ReactDOM from "react-dom";
+import React from "react";
+import App from "./App";
 
-const node = new IPFS();
+function render(App) {
+  ReactDOM.render(<App />, document.getElementById("root"));
+}
 
-console.log(node);
+render(App);
+
+if (module.hot) {
+  module.hot.accept("./App", () => {
+    const NewApp = require("./App");
+    render(NewApp);
+  });
+}
