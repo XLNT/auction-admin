@@ -25,10 +25,15 @@ HillCore.deployed()
     return hillCore.totalSupply();
   })
   .then(totalSupply => {
-    return hillCore.generate(totalSupply, acct1, "Another Test Hill", {
-      from: acct0,
-      gas: 1000000
-    });
+    return hillCore.generate(
+      totalSupply,
+      acct1,
+      `Hill Number: ${totalSupply}`,
+      {
+        from: acct0,
+        gas: 1000000
+      }
+    );
   })
   .then(() => {
     return hillCore.totalSupply();
