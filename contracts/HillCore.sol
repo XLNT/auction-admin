@@ -6,7 +6,7 @@ contract HillCore is StandardAssetRegistry {
 
   function HillCore() public {
     _name = "Crypto Hills";
-    _symbol = "CH";
+    _symbol = "HILL";
     _description = "All The Hills";
   }
 
