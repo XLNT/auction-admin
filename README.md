@@ -13,7 +13,7 @@ ganache-cli
 Install packages
 
 ```
-npm install
+yarn install
 ```
 
 ### Note:
@@ -23,4 +23,17 @@ Ensure your truffle version is:
 ```
 Truffle v4.0.6 (core: 4.0.6)
 Solidity v0.4.19 (solc-js)
+```
+
+
+Compile and migrate your local smart contracts.
+
+```
+truffle migrate --reset
+```
+
+To add an ERC821 CryptoHill to account index 1 run:
+
+```
+node script.js
 ```
