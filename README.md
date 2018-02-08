@@ -27,7 +27,7 @@ yarn install
 
 ### Note:
 
-Ensure your truffle version is:
+Ensure your truffle version is by running `solcjs --version`:
 
 ```
 Truffle v4.0.6 (core: 4.0.6)
