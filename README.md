@@ -10,6 +10,15 @@ Start a local blockchain like [Ganache](https://github.com/trufflesuite/ganache)
 ganache-cli
 ```
 
+Add an `.env` file depending on which port ganache is running on and which port you want your server running on.
+
+```
+// .env
+PORT=6000
+RPC_HOST="127.0.0.1"
+RPC_PORT=8545
+```
+
 Install packages
 
 ```
