@@ -22,10 +22,19 @@ export default class CuratorAssetList extends Component {
     const countWatcher = observe(this, "totalCount", change => {
       this.getAssets();
     });
+    console.log(
+      this.props.store.auctionBase.address,
+      this.props.store.curator.address,
+      this.props.store.currentAccount
+    );
   }
 
   get curator() {
     return this.props.store.curator;
+  }
+
+  get auctionBase() {
+    return this.props.store.auctionBase;
   }
 
   async getTotalCount() {
@@ -45,8 +54,22 @@ export default class CuratorAssetList extends Component {
 
   async importAsset(_id) {
     const { currentBlock } = this.props.store;
+    const owner = await this.curator.ownerOf(_id, currentBlock);
     const data = await this.curator.assetData(_id, currentBlock);
-    return { id: _id, data };
+    const approved = await this.curator.isApprovedFor(
+      this.auctionBase.address,
+      _id,
+      currentBlock
+    );
+    return { id: _id, data, owner, approved };
+  }
+
+  async approveAssetForAuction(asset) {
+    const receipt = await this.curator.approve(
+      this.auctionBase.address,
+      asset.id,
+      { from: this.props.store.currentAccount }
+    );
   }
 
   async generateAsset() {
@@ -58,12 +81,46 @@ export default class CuratorAssetList extends Component {
     );
   }
 
+  async createAuction(asset) {
+    const bidIncrement = this.props.store.web3.toWei(0.1, "ether");
+    const duration = 60 * 60 * 8; // 8 hours
+    console.log(
+      this.curator.address,
+      asset.id,
+      bidIncrement,
+      duration,
+      this.props.store.currentAccount
+    );
+    const receipt = await this.auctionBase.createAuction(
+      this.curator.address,
+      asset.id,
+      bidIncrement,
+      duration,
+      { from: this.props.store.currentAccount }
+    );
+    console.log(receipt);
+  }
+
   render() {
     return (
       <div>
         Current account: {this.props.store.currentAccount}
         <div>Total count: {this.totalCount && this.totalCount.toString()}</div>
-        {this.assets.map(asset => <div key={asset.id}>{asset.data}</div>)}
+        {this.assets.map(asset => (
+          <div key={asset.id}>
+            {asset.approved && "[Approved]"} {asset.data} {asset.owner}{" "}
+            {asset.approved ? (
+              <button onClick={() => this.createAuction(asset)}>
+                Create Auction
+              </button>
+            ) : (
+              <button onClick={() => this.approveAssetForAuction(asset)}>
+                Approve
+              </button>
+            )}
+          </div>
+        ))}
+        <button onClick={() => this.generateAsset()}>Generate asset</button>
         <div>
           <div>Create asset:</div>
           <Upload />
