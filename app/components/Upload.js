@@ -2,42 +2,28 @@ import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 import { observable, action } from "mobx";
 import { field, identity } from "bidi-mobx";
-import IPFS from "ipfs";
 
 @inject("store")
 @observer
 export default class Upload extends Component {
-  @observable links = [];
-  @observable name = "";
-  @observable artist = "";
+  @observable file = null;
 
   // Fields
   nameField = field(identity()).create("");
-  artistField = field(identity()).create("");
-
-  componentDidMount() {
-    this.node = new IPFS();
-    window.n = this.node;
-  }
+  descriptionField = field(identity()).create("");
+  creatorField = field(identity()).create("");
 
   handleFile = e => {
-    console.log(e.target.files);
     const reader = new FileReader();
     const file = e.target.files[0];
     reader.onload = e => {
-      console.log(file.name, e.target.result);
-      this.node.files
-        .add([
-          {
-            path: file.name,
-            content: new Buffer(e.target.result)
-          }
-        ])
-        .then(objects => {
-          this.links = [...this.links, ...objects];
-        });
+      this.file = {
+        path: file.name,
+        content: new Buffer(e.target.result)
+      };
+      this.fileErrorMessage = null;
     };
-    reader.readAsArrayBuffer(e.target.files[0]);
+    reader.readAsArrayBuffer(file);
   };
 
   @action
@@ -46,15 +32,31 @@ export default class Upload extends Component {
   }
 
   async submitForm() {
-    const data = {
-      name: this.nameField.model,
-      artist: this.artistField.model
-    };
-    const res = await this.node.object.put({
-      Data: new Buffer(JSON.stringify(data)),
-      Links: this.links
-    });
-    console.log(res);
+    if (this.file == null) {
+      this.fileErrorMessage = "Please add a file!";
+    } else {
+      const [fileResponse] = await this.props.store.ipfsNode.files.add([
+        this.file
+      ]);
+
+      const data = {
+        name: this.nameField.model,
+        description: this.descriptionField.model,
+        creator: this.creatorField.model,
+        resourceIdentifiers: {
+          default: fileResponse.hash
+        }
+      };
+
+      const cid = await this.props.store.ipfsNode.dag.put(data, {
+        format: "dag-cbor",
+        hashAlg: "sha2-256"
+      });
+
+      console.log("IPFS DAG HASH", cid.toBaseEncodedString());
+
+      this.props.onUpload(cid.toBaseEncodedString());
+    }
   }
 
   render() {
@@ -62,11 +64,6 @@ export default class Upload extends Component {
       <div>
         <input type="file" onChange={this.handleFile} />
         <br />
-        {this.hash && (
-          <a href={"https://ipfs.io/ipfs/" + this.hash}>
-            View Here {this.hash}
-          </a>
-        )}
         <div>
           Name:
           <input
@@ -76,11 +73,18 @@ export default class Upload extends Component {
           />
         </div>
         <div>
-          Artist:
+          Creator:
           <input
             type="text"
-            value={this.artistField.model}
-            onChange={e => this.handleInputChange(this.artistField, e)}
+            value={this.creatorField.model}
+            onChange={e => this.handleInputChange(this.creatorField, e)}
+          />
+        </div>
+        <div>
+          Description:
+          <textarea
+            value={this.descriptionField.model}
+            onChange={e => this.handleInputChange(this.descriptionField, e)}
           />
         </div>
         <div>
