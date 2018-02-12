@@ -48,14 +48,14 @@ export default class Upload extends Component {
         }
       };
 
-      const cid = await this.props.store.ipfsNode.dag.put(data, {
-        format: "dag-cbor",
-        hashAlg: "sha2-256"
-      });
+      const obj = {
+        Data: new Buffer(JSON.stringify(data)),
+        Links: []
+      };
 
-      console.log("IPFS DAG HASH", cid.toBaseEncodedString());
+      const node = await this.props.store.ipfsNode.object.put(obj);
 
-      this.props.onUpload(cid.toBaseEncodedString());
+      this.props.onUpload(node.toJSON().multihash);
     }
   }
 
