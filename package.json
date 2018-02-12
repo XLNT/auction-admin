@@ -1,21 +1,15 @@
 {
-  "name": "xlnt-auction-admin",
+  "name": "auction-admin",
   "version": "1.0.0",
   "description": "Contracts for ERC 821 tokenized artworks",
   "scripts": {
     "start": "node server.js",
-    "build": "cross-env BABEL_ENV=production ./node_modules/.bin/webpack --config webpack.config.production.js"
+    "build":
+      "cross-env BABEL_ENV=production ./node_modules/.bin/webpack --config webpack.config.production.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hillstreetlabs/registry.git"
-  },
-  "author": "Hill Street Labs",
+  "author": "XLNT",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/hillstreetlabs/registryissues"
-  },
-  "homepage": "https://github.com/hillstreetlabs/registry#readme",
+  "homepage": "https://github.com/xlnt/auction-admin#readme",
   "dependencies": {
     "auction-contracts": "git+ssh://git@github.com:XLNT/auction-contracts.git",
     "babel-core": "^6.26.0",
@@ -63,7 +57,8 @@
     "prettier": "^1.9.2",
     "solidity-sha3": "^0.4.1",
     "truffle": "4.0.6",
-    "truffle-contract": "git+ssh://git@github.com/pfletcherhill/truffle-contract.git",
+    "truffle-contract":
+      "git+ssh://git@github.com/pfletcherhill/truffle-contract.git",
     "truffle-flattener": "^1.2.0",
     "truffle-hdwallet-provider": "0.0.3"
   }
