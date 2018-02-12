@@ -72,14 +72,14 @@ export default class CuratorAssetList extends Component {
     );
   }
 
-  async generateAsset() {
+  generateAssetWithMetadata = async metadataHash => {
     const receipt = await this.curator.generate(
       this.totalCount,
       this.props.store.currentAccount,
-      `Asset number ${this.totalCount.toString()}`,
+      metadataHash,
       { from: this.props.store.currentAccount }
     );
-  }
+  };
 
   async createAuction(asset) {
     const bidIncrement = this.props.store.web3.toWei(0.1, "ether");
@@ -120,10 +120,9 @@ export default class CuratorAssetList extends Component {
             )}
           </div>
         ))}
-        <button onClick={() => this.generateAsset()}>Generate asset</button>
         <div>
           <div>Create asset:</div>
-          <Upload />
+          <Upload onUpload={this.generateAssetWithMetadata} />
         </div>
       </div>
     );
